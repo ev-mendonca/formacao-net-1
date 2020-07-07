@@ -149,6 +149,12 @@ namespace CasaDoCodigo.Models
         [Required]
         public string Nome { get; private set; }
         public List<Produto> Produtos { get; private set; } = new List<Produto>();
-
+        
+        public override bool Equals(object obj)
+        {
+            Categoria categoria = obj as Categoria;
+            if (categoria == null) return false;
+            return Id == categoria.Id;
+        }
     }
 }

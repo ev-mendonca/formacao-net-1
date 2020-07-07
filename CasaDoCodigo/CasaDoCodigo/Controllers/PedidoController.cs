@@ -54,6 +54,11 @@ namespace CasaDoCodigo.Controllers
             return View(pedido.Cadastro);
         }
 
+        public IActionResult BuscaDeProdutos()
+        {
+            return View(produtoRepository.GetProdutos());
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Resumo(Cadastro cadastro)
