@@ -1,45 +1,49 @@
 ﻿@{ ViewData["Title"] = "Carrossel"; }
 
-@model List<Produto>;
+@model BuscaDeProdutosViewModel;
 
 <div class="container">
     <div class="row">
         <div class="col-md-4">
             <h2>Buscar produtos</h2>
-            <div id="custom-search-input">
-                <div class="input-group col-md-12">
-                    <input type="text" name="pesquisa" class="form-control input-lg" placeholder="categoria ou produto" id="Pesquisa" value="" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-info btn-lg" type="submit">
-                            <i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
+            <form method="get">
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" asp-for="Busca" class="form-control input-lg" placeholder="categoria ou produto" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-lg" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
-@{ IEnumerable<Categoria> categoriasDeProutos = Model.Select(m => m.Categoria).Distinct(); }
-@foreach (var categoria in categoriasDeProutos)
+@if (Model.TotalProdutos > 0)
 {
+     IEnumerable<Categoria> categoriasDeProutos = Model.Produtos.Select(m => m.Categoria).Distinct(); 
+        foreach (var categoria in categoriasDeProutos)
+        { 
     <h3>@categoria.Nome</h3>
         <div id="my-carousel-@categoria.Id" class="carousel slide" data-ride="carousel">
         <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
                 @{ 
                     const int TAMANHO_PAGINA = 4;
-                    IEnumerable<Produto> produtosDacategoria = Model.Where(m => m.Categoria == categoria);
+                    IEnumerable<Produto> produtosDacategoria = Model.Produtos.Where(m => m.Categoria == categoria);
                     int paginas = (int)Math.Ceiling((double)produtosDacategoria.Count() / TAMANHO_PAGINA);
                  }
 
                  @for (int pagina = 0; pagina < paginas; pagina++)
-                  {
+                 {
                      <div class="item @(pagina == 0 ? "active" : "")">
                         <div class="row">
                             @{ var produtosDaPagina = produtosDacategoria.Skip(pagina * TAMANHO_PAGINA).Take(TAMANHO_PAGINA); }
                             @foreach (var produto in produtosDaPagina)
-                             {
+                            {
                                 <div class="col-md-3 col-sm-3 col-lg-3">
                                     <div class="panel panel-default">
                                         <div class="panel-body">
@@ -54,10 +58,10 @@
                                         </div>
                                     </div>
                                 </div>
-                             }
+                            }
                         </div>
                      </div>
-                  }
+                                }
             </div>
         <!-- Controls -->
         <a class="left carousel-control" href="#my-carousel-1" role="button" data-slide="prev">
@@ -69,5 +73,12 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
+                                }
 }
+else 
+{
+    <label>Nenhum produto encontrado</label>
+}
+
+
 

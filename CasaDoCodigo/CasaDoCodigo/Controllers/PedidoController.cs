@@ -54,9 +54,11 @@ namespace CasaDoCodigo.Controllers
             return View(pedido.Cadastro);
         }
 
-        public IActionResult BuscaDeProdutos()
+        public async Task<IActionResult> BuscaDeProdutos(string busca)
         {
-            return View(produtoRepository.GetProdutos());
+            var produtos = (await produtoRepository.GetProdutos(busca)).ToList();
+            var viewModel = new BuscaDeProdutosViewModel(produtos, busca);
+            return View(viewModel);
         }
 
         [HttpPost]
